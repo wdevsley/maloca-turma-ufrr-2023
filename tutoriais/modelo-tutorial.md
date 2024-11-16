@@ -1,6 +1,6 @@
 # Título do Tutorial
 
-**Descrição:** Breve introdução ao tutorial, explicando o objetivo do projeto, as habilidades que serão adquiridas e o público-alvo. Ex.: "Neste tutorial, vamos desenvolver um sistema de monitoramento de sinais vitais usando uma ESP32 com sensores de temperatura e frequência cardíaca."
+**Descrição:** Breve introdução ao tutorial, explicando o objetivo do projeto, as habilidades que serão adquiridas e o público-alvo. Ex.: "Neste tutorial, vamos desenvolver um sistema de monitoramento de sinais vitais usando uma ESP32 com sensores de temperatura e frequência cardía."
 
 ---
 
