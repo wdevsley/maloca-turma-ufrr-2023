@@ -8,7 +8,7 @@
 - 
 
 ### Contexto e Motivação:
-<!-- Explique o problema ou a necessidade que levou a esta implementação, especialmente considerando o contexto de IoT na área da saúde. -->
+<!-- Explique o probema ou a necessidade que levou a esta implementação, especialmente considerando o contexto de IoT na área da saúde. -->
 
 - 
 
