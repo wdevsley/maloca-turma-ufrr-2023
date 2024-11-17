@@ -66,4 +66,3 @@ Closes #
 
 ---
 
-**Nota:** Esse preenchimento detalhado demonstra a implementação e validação completa, ajudando a garantir uma revisão rápida e eficaz.
