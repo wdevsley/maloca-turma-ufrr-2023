@@ -49,7 +49,7 @@
 ### Hardware Utilizado:
 - Arduino Uno.
 - PulseSensor (sensor de frequência cardíaca).
-- LEDs (verde e vermelho) com resistores de 220Ω.
+- LEDs (verde e vermelho) com resistores de 330Ω.
 
 ### Simulação Utilizado:
 - Simulação do sistema no Tinkercad.
