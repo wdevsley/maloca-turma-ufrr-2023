@@ -1,6 +1,6 @@
 # Título do Tutorial
 
-**Descrição:** Breve introdução ao tutorial, explicando o objetivo do projeto, as habilidades que serão adquiridas e o público-alvo. Ex.: "Neste tutorial, vamos desenvolver um sistema de monitoramento de sinais vitais usando uma ESP32 com sensores de temperatura e frequência cardíaca."
+**Descrição:** Neste tutorial, vamos construir um Monitor de Batimentos Cardíacos com Alerta via LED, um dispositivo que mede a frequência cardíaca em tempo real e utiliza LEDs para alertar sobre possíveis irregularidades. O objetivo principal do projeto é introduzir conceitos básicos de eletrônica, programação e uso de sensores biométricos, proporcionando uma experiência prática e educativa.
 
 ---
 
@@ -19,7 +19,7 @@
 
 ## Introdução
 
-Explique o propósito do projeto em um contexto de saúde. Por exemplo, o monitoramento de sinais vitais em tempo real para pacientes, ou um sistema de alarme para quedas. Inclua uma breve visão sobre como o projeto se integra ao ambiente IoT.
+Bem-vindo ao tutorial de construção de um Monitor de Batimentos Cardíacos com Alerta via LED! Neste guia passo a passo, você aprenderá a criar um dispositivo capaz de medir a frequência cardíaca em tempo real utilizando um sensor biométrico e um microcontrolador Arduino. O sistema aciona LEDs para fornecer alertas visuais: um LED verde indica frequência cardíaca normal, enquanto um LED vermelho sinaliza batimentos fora do intervalo ideal.
 
 ---
 
@@ -27,16 +27,16 @@ Explique o propósito do projeto em um contexto de saúde. Por exemplo, o monito
 
 ### Hardware
 
-- **Placa**: Arduino, ESP32, Raspberry Pi
-- **Sensores**: Detalhe cada sensor, como sensores de temperatura, oxímetro, acelerômetro, entre outros
-- **Atuadores**: Como LEDs, buzzer, relés, etc.
-- **Outros componentes**: Jumpers, resistores, display LCD, etc.
+- **Placa**: Arduino Uno R3
+- **Sensores**: Pulse Sensor, Um sensor óptico simples e eficiente que utiliza luz para detectar alterações no fluxo sanguíneo.
+- **Atuadores**: LEDs 
+- **Outros componentes**: Resistores, Jumpers
 
 ### Software
 
-- **Linguagens**: C/C++ para Arduino e ESP32, Python para Raspberry Pi
-- **IDE**: Arduino IDE, Thonny para Raspberry Pi, VS Code (opcional)
-- **Bibliotecas**: Liste as bibliotecas necessárias, como `Adafruit_Sensor`, `DHT`, entre outras.
+- **Linguagens**: C/C++ para Arduino
+- **IDE**: Arduino IDE
+- **Bibliotecas**: PulseSensor Playground
 
 ---
 
@@ -44,27 +44,43 @@ Explique o propósito do projeto em um contexto de saúde. Por exemplo, o monito
 
 ### Passo 1: Instalação do Software
 
-- **Arduino IDE**: Instruções para instalar e configurar a IDE do Arduino para ESP32/Arduino.
-- **Thonny Python**: Configuração do Thonny para programar em Python no Raspberry Pi.
-- **Bibliotecas**: Como instalar as bibliotecas necessárias. Exemplo:
+- **Arduino IDE**:
+1. Acesse o site oficial do Arduino: https://www.arduino.cc
+2. No menu, clique em Software e, em seguida, clique em Download.
+3. Escolha a versão compatível com o seu sistema operacional (Windows, macOS ou Linux).![Captura de Tela (22)](https://github.com/user-attachments/assets/bc803399-03a8-449c-9f45-7cd45668e6d2)
 
-```bash
-# Instalar bibliotecas do Python
-pip install Adafruit_DHT
-```
 
 ### Passo 2: Configuração das Placas
 
-- **Arduino/ESP32**: Passos para configurar a placa e selecionar a porta correta na IDE.
-- **Raspberry Pi**: Configuração do GPIO para comunicação com os sensores.
+- **Configuração no Arduino**:
+1. Conecte seu Arduino ao computador via USB.
+2. No Arduino IDE, vá para Ferramentas > Placa e escolha o modelo do seu Arduino (por exemplo, Arduino Uno).
+3. Em Ferramentas > Porta, selecione a porta à qual o Arduino está conectado (por exemplo, COM3 no Windows ou /dev/ttyUSB0 no Linux).![IDE](https://github.com/user-attachments/assets/3987b794-df1a-41e2-8841-2b934e99729c)
+
+
 
 ---
 
 ## Montagem do Circuito
 
-Insira um diagrama do circuito, ou descreva as conexões principais, incluindo onde cada sensor e atuador deve ser conectado. 
+**Conectar o Sensor ao Arduino**
+- VCC do sensor → 5V no Arduino.
+- GND do sensor → GND no Arduino.
+- Sinal do sensor → A0 no Arduino.
 
-> **Nota**: Use imagens ou diagramas para auxiliar a compreensão.
+**Conectar os LEDs**
+1. LED Verde:
+    - Anodo (perna longa) → Pino digital D2 (via resistor de 330 Ω).
+    - Catodo (perna curta) → GND.
+2. LED Vermelho:
+    - Anodo → Pino digital D3 (via resistor de 330 Ω).
+    - Catodo → GND.
+  
+   ![Captura de Tela (21)](https://github.com/user-attachments/assets/ea032f68-d184-4153-80c0-631aac6a2dbb)
+
+   Link do circuito no Tinkercad: https://www.tinkercad.com/things/diNXBp7jY2n-monitor-de-batimentos-cardiacos-com-alerta-via-led?sharecode=Eh0NAm455gc2cGZ-tbGXkeiGWD5VI6SkQIKg53SIBV0
+
+
 
 ---
 
@@ -72,72 +88,116 @@ Insira um diagrama do circuito, ou descreva as conexões principais, incluindo o
 
 ### Passo 1: Configuração dos Sensores e Atuadores
 
-Forneça o código para a configuração dos sensores. Por exemplo, para medir temperatura e batimentos cardíacos:
+Para configurar nosso Monitor de Batimentos Cardíacos com Alerta via LED, utilizaremos o seguinte código:
 
-**Exemplo em C para ESP32:**
 
-```cpp
-#include <DHT.h>
+```c
+#include <PulseSensorPlayground.h>
 
-#define DHTPIN 2     // Pino do sensor DHT
-#define DHTTYPE DHT11 
+#define SENSOR_PIN A0  // Pino para o sensor
+#define GREEN_LED 2    // LED verde para BPM normal
+#define RED_LED 3      // LED vermelho para BPM fora da faixa
 
-DHT dht(DHTPIN, DHTTYPE);
+PulseSensorPlayground pulseSensor;
 
 void setup() {
-  Serial.begin(9600);
-  dht.begin();
+  pinMode(GREEN_LED, OUTPUT);  // Define o LED verde como saída
+  pinMode(RED_LED, OUTPUT);    // Define o LED vermelho como saída
+  Serial.begin(9600);          // Inicializa a comunicação serial
+
+  pulseSensor.analogInput(SENSOR_PIN);
+  pulseSensor.begin();
 }
 
 void loop() {
-  float temp = dht.readTemperature();
-  Serial.println(temp);
-  delay(2000);
+  int bpm = pulseSensor.getBeatsPerMinute();  // Lê o BPM do sensor
+
+  Serial.print("BPM: ");
+  Serial.println(bpm);  // Exibe o BPM no Monitor Serial
+
+  // Se o BPM estiver dentro da faixa normal
+  if (bpm >= 60 && bpm <= 100) {
+    digitalWrite(GREEN_LED, HIGH);  // Acende o LED verde
+    digitalWrite(RED_LED, LOW);     // Desliga o LED vermelho
+  } else {
+    digitalWrite(GREEN_LED, LOW);   // Desliga o LED verde
+    digitalWrite(RED_LED, HIGH);    // Acende o LED vermelho
+  }
+
+  delay(1000);  // Atualiza a cada segundo
 }
+
 ```
 
-**Exemplo em Python para Raspberry Pi:**
+**Na IDE do Tinkercad use:**
 
-```python
-import Adafruit_DHT
+```c
+#define SENSOR_PIN A0
+#define GREEN_LED 2
+#define RED_LED 3
 
-sensor = Adafruit_DHT.DHT11
-pin = 4  # Pino GPIO
+void setup() {
+  pinMode(SENSOR_PIN, INPUT);
+  pinMode(GREEN_LED, OUTPUT);
+  pinMode(RED_LED, OUTPUT);
+  Serial.begin(9600);
+}
 
-humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
-print(f"Temperatura: {temperature}ºC")
+void loop() {
+  int signal = analogRead(SENSOR_PIN);
+  int bpm = calculateBPM(signal); // Supondo que tenha uma função para calcular BPM
+
+  Serial.print("BPM: ");
+  Serial.println(bpm);
+
+  if (bpm >= 60 && bpm <= 100) {
+    digitalWrite(GREEN_LED, HIGH);
+    digitalWrite(RED_LED, LOW);
+  } else {
+    digitalWrite(GREEN_LED, LOW);
+    digitalWrite(RED_LED, HIGH);
+  }
+
+  delay(1000); // Atualização a cada segundo
+}
+
+int calculateBPM(int signal) {
+  return random(50, 120); // Simula valores de BPM
+}
+
 ```
 
 ### Passo 2: Processamento e Lógica de Alerta
 
-Adicione a lógica para processar os dados e acionar atuadores, como LEDs ou buzzer, caso as leituras excedam um determinado limite.
+**1. Processamento dos Dados do Sensor**
+O sensor de batimentos cardíacos, como o PulseSensor, gera um sinal analógico que reflete a variação do ritmo cardíaco. Esse sinal precisa ser processado para calcular a frequência cardíaca (em batimentos por minuto, BPM).
 
----
+**2. Lógica de Alerta**
+A lógica de alerta depende dos valores de BPM obtidos. Geralmente, definimos intervalos de BPM que indicam normalidade ou anormalidade. Quando o valor de BPM cair dentro de uma faixa saudável, um alerta visual (LED verde) é ativado. Se o valor estiver fora dessa faixa (muito alto ou muito baixo), um alerta diferente (LED vermelho) é acionado.
 
 ## Teste e Validação
 
 Descreva os testes para validar cada parte do projeto:
 
-1. **Testando Sensores**: Verifique se as leituras são consistentes e corretas.
-2. **Validação dos Atuadores**: Confirme que os atuadores funcionam corretamente.
-3. **Monitoramento em Tempo Real**: Teste o sistema completo em condições simuladas para garantir que funciona conforme o esperado.
+1. **Testando Sensores**: O valor de BPM deve estar mudando conforme o toque no sensor (evidência de que o sensor está funcionando).
+2. **Validação dos Atuadores**: Quando o BPM estiver dentro da faixa normal (entre 60 e 100 BPM), o LED verde deve acender.
+   Quando o BPM estiver fora da faixa normal, o LED vermelho deve acender.
+4. **Monitoramento em Tempo Real**: O sistema deve exibir o valor de BPM no Monitor Serial em tempo real, com atualizações a cada segundo.
 
 ---
 
 ## Expansões e Melhorias
 
-Sugestões para melhorar o projeto, como:
-
-- Adicionar comunicação Wi-Fi (ESP32) para enviar dados para uma nuvem.
-- Integrar um banco de dados para registro das leituras.
-- Conectar-se a uma aplicação móvel para visualização remota.
+- Exibição de dados em Display, dispensa o uso do Monitor Serial e torna o dispositivo portátil e independente.
+- Alerta sonoro, proporciona um alerta adicional para situações críticas.
+- Detecção de anormalidades, expande o uso do projeto para monitoramento mais avançado.
 
 ---
 
 ## Referências
-
-Liste todas as referências e links úteis para guias, bibliotecas, e materiais adicionais que ajudem a complementar o tutorial.
+1. https://www.tinkercad.com/things/diNXBp7jY2n-monitor-de-batimentos-cardiacos-com-alerta-via-led?sharecode=Eh0NAm455gc2cGZ-tbGXkeiGWD5VI6SkQIKg53SIBV0
+2. https://github.com/WorldFamousElectronics/PulseSensorPlayground
+3. https://www.arduino.cc/en/software
 
 ---
 
-Espero que esse modelo ajude a organizar o conteúdo e fornecer uma estrutura clara e completa para tutoriais de IoT no contexto da saúde.
