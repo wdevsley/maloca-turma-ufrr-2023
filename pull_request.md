@@ -31,18 +31,18 @@
 
 ## Checklist
 
-- [✓ ] Código atende às normas do projeto e foi formatado de acordo com as diretrizes.
-- [✓ ] Código foi testado e validado em ambiente de desenvolvimento com hardware real (Arduino, Raspberry Pi, ESP32) ou simulação (tinkercad).
-- [✓ ] Documentação atualizada para refletir as mudanças realizadas.
-- [✓ ] Código escrito e comentado em **C** ou **Python** de acordo com os padrões do projeto.
-- [✓ ] Testes com sensores e atuadores específicos incluídos e detalhados na descrição dos testes.
+- [x] Código atende às normas do projeto e foi formatado de acordo com as diretrizes.
+- [x] Código foi testado e validado em ambiente de desenvolvimento com hardware real (Arduino, Raspberry Pi, ESP32) ou simulação (tinkercad).
+- [x] Documentação atualizada para refletir as mudanças realizadas.
+- [x] Código escrito e comentado em **C** ou **Python** de acordo com os padrões do projeto.
+- [x] Testes com sensores e atuadores específicos incluídos e detalhados na descrição dos testes.
 
 ## Tipo de Mudança
 
-   - [ ] Correção de bug
-- [ ✔] Nova funcionalidade
-   - [ ] Alteração de funcionalidade existente
-- [ ✓] Documentação
+- [ ] Correção de bug
+- [x] Nova funcionalidade
+- [ ] Alteração de funcionalidade existente
+- [x] Documentação
 
 ## Informações Adicionais
 
