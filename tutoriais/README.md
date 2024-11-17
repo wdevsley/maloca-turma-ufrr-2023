@@ -1,4 +1,4 @@
-# Título do Tutorial
+# Monitor de batimentos cardíacos com alerta via LED
 
 **Descrição:** Neste tutorial, vamos construir um Monitor de Batimentos Cardíacos com Alerta via LED, um dispositivo que mede a frequência cardíaca em tempo real e utiliza LEDs para alertar sobre possíveis irregularidades. O objetivo principal do projeto é introduzir conceitos básicos de eletrônica, programação e uso de sensores biométricos, proporcionando uma experiência prática e educativa.
 
